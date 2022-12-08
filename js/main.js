@@ -1,19 +1,60 @@
 const nameH1Element = document.querySelector('h1.inline');
 const connectNameElement = document.querySelector('span.red');
+const inputModalElement = document.querySelector('#inputModal');
+const studentNumberElement = document.querySelector('span.studentNo');
+const studentEmailElement = document.querySelector('span.email');
 
-const localName = localStorage.getItem('name');
-if (localName) {
-    nameH1Element.textContent = localName;
-    connectNameElement.textContent = localName;
+const setUserName = (name) => {
+    nameH1Element.textContent = name;
+    connectNameElement.textContent = name;
 }
 
+const setUserNumber = (number) => {
+    studentNumberElement.textContent = number;
+}
+
+const setUserEmail = (text) => {
+    studentEmailElement.textContent = text;
+}
+
+
+const localName = localStorage.getItem('userName');
+if (localName) {
+    setUserName(localName);
+}
+
+const localNumber = localStorage.getItem('studentNo');
+if (localNumber) {
+    setUserNumber(localNumber);
+}
+
+const localEmail = localStorage.getItem('email');
+if (localEmail) {
+    setUserEmail(localEmail);
+}
+
+console.log(inputModalElement);
+
 nameH1Element.onclick = () => {
-    const inputName = prompt('이름을 입력해주세요.');
-    if (inputName) {
-        localStorage.setItem('name', inputName);
-        nameH1Element.textContent = inputName;
-        connectNameElement.textContent = localName;
-    } else {
-        alert('이름이 입력되지 않았습니다.');
+    inputModalElement.showModal();
+};
+
+const modalSubmitBtn = document.querySelector('button.modalSubmit');
+
+modalSubmitBtn.onclick = () => {
+    const modalFormElement = document.querySelector('.modalForm');
+    const formData = new FormData(modalFormElement);
+
+    for (const [key, value] of formData) {
+        localStorage.setItem(key, value);
+        if (key === 'userName') setUserName(value);
+        if (key === 'studentNo') setUserNumber(value);
+        if (key === 'email') setUserEmail(value);
     }
+
+    inputModalElement.close();
+};
+
+inputModalElement.onclick = (event) => {
+    if (event.target.nodeName === 'DIALOG') inputModalElement.close();
 };
